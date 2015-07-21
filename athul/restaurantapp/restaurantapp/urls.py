@@ -18,6 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', 'restaurantapp.restaurantapp.views.login', name='restaurant'),
-    url(r'^sign', 'restaurantapp.login.views.signs', name='signup'),
+    url(r'^login/', 'restaurantapp.restaurantapp.views.login', name='restaurant'),
 ]
