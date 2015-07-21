@@ -1,0 +1,26 @@
+    #connect to our local mongodb
+    db = MongoClient('localhost',27017)
+    #get a connection to our database
+    dbconn = db.restaurants
+    restaurantCollection = dbconn['restaurants']
+
+    if request.method == 'GET':
+        #get our collection
+        restaurants = []
+        for r in restaurantCollection.find():
+            restaurant = Restaurant(r["_id"],r["name"],r["address"])
+            restaurants.append(restaurant)
+        serializedList = RestaurantSerializer(restaurants, many=True)
+        return Response(serializedList.data)
+    elif request.method == 'POST':
+        #get data from the request and insert the record
+        name = request.POST.get("email")
+        address = request.POST.get("password")
+        try:
+            restaurantCollection.insert({"email" : name, "password": address})
+        except:
+            return Response({ "ok": "false" })
+        return Response({ "ok": "true" })
+
+                   # loginCollection.insert({"email" : email, "password": password})
+# request = loginCollection.find({"email" : "athul@gmail.com","password":"athul"},{"_id":0,"frist":0,"last":0,"password":0})                                                                                                                                                                                                                                                                                                                                                    
