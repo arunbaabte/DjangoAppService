@@ -41,9 +41,11 @@ def login(request):
         password = request.DATA["password"]
         try:
             log=  dbconn.system_js.loginFunction(email,password)
+            print log
+            id =log[0]['name'] 
              
         except:
              return Response({ "ok": "false" })
-        return Response({"true"})
+        return Response({id})
         
  
