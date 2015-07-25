@@ -4,9 +4,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-# from pymongo import Connection
-from models import Restaurant
-from serializers import RestaurantSerializer
+
 import json
 from pymongo import MongoClient
 from django.conf import settings
@@ -22,16 +20,16 @@ from bson import ObjectId
 
 @csrf_exempt
 @api_view(['GET','POST'])
-def login(request):
+def logout(request):
     #connect to our local mongodb
     db = MongoClient('localhost',27017)
     #get a connection to our database
     dbconn = db.restaurants
-    loginCollection = dbconn['login']
+
     detailCollection = dbconn['detail']
     if request.method == 'GET':
         login = []
-        for r in loginCollection.find():
+        for r in detailCollection.find():
         #     logins = Restaurant(r["email"],r["password"])
         #     print logins
         #     # login.append(logins)
@@ -39,23 +37,14 @@ def login(request):
          return Response("hi")
     elif request.method == 'POST':
         #get data from the request and insert the record
-        email = request.DATA["email"]
-        password = request.DATA["password"]
+        id = request.DATA["id"]
+        print id
         try:
-            log=  dbconn.system_js.loginFunction(email,password)
-            email =log[0]['email']
-            name  =log[0]['name']
-            gender  =log[0]['gender']
-            address  =log[0]['address']
-            role  =log[0]['role']
-            phone  =log[0]['phone']
-            id =log[0]['_id']
-            a=str(id)
-            detailCollection.insert({"id" :a ,"email" : email,"name":name,"phone":phone,"gender" :gender,"address":address,"role":role})
-            print a
+            # detailCollection.remove({"id" :id})
+            dbconn.system_js.logout(id)
         except:
               return Response({ "false" })
-        return Response({"id" :a,"role":role})
+        return Response({"true"})
 
         
  
